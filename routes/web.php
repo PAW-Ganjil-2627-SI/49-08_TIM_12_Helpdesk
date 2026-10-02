@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +34,6 @@ Route::get('/masuk', [AuthController::class, 'show'])->name('login')->middleware
 Route::post('/masuk', [AuthController::class, 'login'])->name('login.attempt')->middleware('guest');
 Route::post('/daftar', [AuthController::class, 'register'])->name('register.store')->middleware('guest');
 Route::post('/keluar', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
