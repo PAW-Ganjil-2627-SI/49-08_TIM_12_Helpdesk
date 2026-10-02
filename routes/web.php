@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\AuthController;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +28,10 @@ Route::post('/tiket', function (Request $request) {
     return redirect()->route('tickets.create')->with('ticket_no', $no);
 })->name('tickets.store');
 
-Route::view('/kategori', 'kategori')->name('categories.index');
+Route::get('/kategori', function () {
+    return view('kategori', ['kategori' => Kategori::orderBy('nama')->get()]);
+})->name('categories.index');
+
 Route::view('/teknisi', 'teknisi')->name('technicians.index');
 Route::view('/knowledge-base', 'knowledge-base')->name('kb.index');
 Route::view('/aset', 'aset')->name('assets.index');
@@ -36,4 +41,5 @@ Route::post('/daftar', [AuthController::class, 'register'])->name('register.stor
 Route::post('/keluar', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('kategori', KategoriController::class)->except('show');
 });

@@ -20,6 +20,20 @@
         .ikon { width: 52px; height: 52px; border-radius: 50%; }
         .kartu small { color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 12px; }
         .kartu strong { display: block; font-size: 32px; }
+
+        .judul { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn { display: inline-block; background: #0d9488; color: #fff; border: 0; padding: 9px 16px; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 14px; }
+        .btn.merah { background: #ef4444; }
+        .btn.abu { background: #64748b; }
+        table { width: 100%; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; border-collapse: collapse; overflow: hidden; }
+        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        th { background: #f1f5f9; }
+        .aksi { display: flex; gap: 8px; }
+        .alert { background: #dcfce7; color: #166534; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; }
+        .form-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; max-width: 560px; }
+        .form-box label { display: block; font-weight: 600; margin: 14px 0 6px; }
+        .form-box input, .form-box textarea { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; }
+        .error { color: #dc2626; font-size: 13px; margin-top: 4px; }
     </style>
 </head>
 <body>
@@ -35,9 +49,9 @@
     </header>
 
     <aside class="sidebar">
-        <a href="{{ route('admin.dashboard') }}" class="aktif">Dashboard</a>
+        <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'aktif' : '' }}">Dashboard</a>
         <a href="#">Tiket</a>
-        <a href="#">Kategori</a>
+        <a href="{{ route('admin.kategori.index') }}" class="{{ request()->routeIs('admin.kategori.*') ? 'aktif' : '' }}">Kategori</a>
         <a href="#">Knowledge Base</a>
         <a href="#">Teknisi</a>
         <a href="#">Aset</a>
