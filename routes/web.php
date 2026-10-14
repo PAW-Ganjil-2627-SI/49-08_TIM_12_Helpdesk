@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\TeknisiController;
+use App\Models\Teknisi;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,8 +33,15 @@ Route::post('/tiket', function (Request $request) {
 Route::get('/kategori', function () {
     return view('kategori', ['kategori' => Kategori::orderBy('nama')->get()]);
 })->name('categories.index');
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('kategori', KategoriController::class)->except('show');
+    Route::resource('teknisi', TeknisiController::class)->except('show')->parameters(['teknisi' => 'teknisi']);
+});
 
-Route::view('/teknisi', 'teknisi')->name('technicians.index');
+Route::get('/teknisi', function () {
+    return view('teknisi', ['teknisi' => Teknisi::orderBy('nama')->get()]);
+})->name('technicians.index');
 Route::view('/knowledge-base', 'knowledge-base')->name('kb.index');
 Route::view('/aset', 'aset')->name('assets.index');
 Route::get('/masuk', [AuthController::class, 'show'])->name('login')->middleware('guest');

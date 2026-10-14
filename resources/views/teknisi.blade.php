@@ -1,37 +1,26 @@
 @extends('layouts.app')
 
 @section('title', 'Teknisi IT')
-@section('lead', 'Siapa yang menangani apa, dan seberapa padat antrean tiap teknisi hari ini. Kapasitas satu teknisi adalah 5 tiket aktif.')
+@section('lead', 'Siapa yang menangani apa dan bagaimana ketersediaan tiap teknisi hari ini.')
 
 @section('content')
-    @php
-        $teknisi = [
-            ['nama' => 'Rudi Hartono', 'bidang' => 'Jaringan, perangkat keras', 'status' => 'Sibuk', 'tiket' => 4],
-            ['nama' => 'Dimas Pratama', 'bidang' => 'Perangkat keras', 'status' => 'Tersedia', 'tiket' => 2],
-            ['nama' => 'Sinta Maharani', 'bidang' => 'Akun, perangkat lunak', 'status' => 'Tersedia', 'tiket' => 1],
-            ['nama' => 'Bagas Wicaksono', 'bidang' => 'Printer & periferal', 'status' => 'Sibuk', 'tiket' => 5],
-        ];
-    @endphp
-
     <div class="tablewrap">
         <table>
             <thead>
-                <tr><th>Nama</th><th>Bidang</th><th>Status</th><th>Tiket aktif</th></tr>
+                <tr><th>Nama</th><th>Bidang</th><th>Status</th></tr>
             </thead>
             <tbody>
-                @foreach ($teknisi as $t)
+                @forelse ($teknisi as $t)
                     <tr>
-                        <td><strong>{{ $t['nama'] }}</strong></td>
-                        <td>{{ $t['bidang'] }}</td>
-                        <td><span class="chip {{ $t['status'] === 'Tersedia' ? 'done' : 'doing' }}">{{ $t['status'] }}</span></td>
+                        <td><strong>{{ $t->nama }}</strong></td>
+                        <td>{{ $t->spesialisasi ?? '-' }}</td>
                         <td>
-                            <div class="load">
-                                <span class="mono">{{ $t['tiket'] }} / 5</span>
-                                <div class="bar {{ $t['tiket'] >= 4 ? 'high' : '' }}" role="img" aria-label="{{ $t['tiket'] }} dari 5 tiket"><i style="width: {{ min(100, $t['tiket'] * 20) }}%"></i></div>
-                            </div>
+                            <span class="chip {{ $t->status === 'tersedia' ? 'done' : ($t->status === 'sibuk' ? 'doing' : '') }}">{{ ucfirst($t->status) }}</span>
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr><td colspan="3">Belum ada teknisi yang terdaftar.</td></tr>
+                @endforelse
             </tbody>
         </table>
     </div>

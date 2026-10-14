@@ -140,7 +140,7 @@
 
             @yield('content')
 
-            <p class="note">Data contoh untuk ilustrasi tampilan.</p>
+            
         </div>
     </main>
 
