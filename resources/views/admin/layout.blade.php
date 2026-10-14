@@ -54,7 +54,7 @@
         <a href="{{ route('admin.kategori.index') }}" class="{{ request()->routeIs('admin.kategori.*') ? 'aktif' : '' }}">Kategori</a>
         <a href="#">Knowledge Base</a>
         <a href="{{ route('admin.teknisi.index') }}" class="{{ request()->routeIs('admin.teknisi.*') ? 'aktif' : '' }}">Teknisi</a>
-        <a href="#">Aset</a>
+<a href="{{ route('admin.aset.index') }}" class="{{ request()->routeIs('admin.aset.*') ? 'aktif' : '' }}">Aset</a>
         <a href="#">Pengguna</a>
     </aside>
 
