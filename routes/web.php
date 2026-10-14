@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\TeknisiController;
 use App\Models\Teknisi;
 use App\Http\Controllers\Admin\AsetController;
 use App\Models\Aset;
+use App\Http\Controllers\Admin\ArtikelController;
+use App\Models\Artikel;
 
 Route::get('/', function () {
     return view('welcome');
@@ -44,7 +46,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 Route::get('/teknisi', function () {
     return view('teknisi', ['teknisi' => Teknisi::orderBy('nama')->get()]);
 })->name('technicians.index');
-Route::view('/knowledge-base', 'knowledge-base')->name('kb.index');
+Route::get('/knowledge-base', function () {
+    return view('knowledge-base', ['artikel' => Artikel::latest()->get()]);
+})->name('kb.index');
 Route::get('/aset', function () {
     return view('aset', ['aset' => Aset::orderBy('kode')->get()]);
 })->name('assets.index');
@@ -57,4 +61,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('kategori', KategoriController::class)->except('show');
     Route::resource('teknisi', TeknisiController::class)->except('show')->parameters(['teknisi' => 'teknisi']);
     Route::resource('aset', AsetController::class)->except('show')->parameters(['aset' => 'aset']);
+    Route::resource('artikel', ArtikelController::class)->except('show')->parameters(['artikel' => 'artikel']);
 });

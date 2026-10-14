@@ -52,7 +52,7 @@
         <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'aktif' : '' }}">Dashboard</a>
         <a href="#">Tiket</a>
         <a href="{{ route('admin.kategori.index') }}" class="{{ request()->routeIs('admin.kategori.*') ? 'aktif' : '' }}">Kategori</a>
-        <a href="#">Knowledge Base</a>
+<a href="{{ route('admin.artikel.index') }}" class="{{ request()->routeIs('admin.artikel.*') ? 'aktif' : '' }}">Knowledge Base</a>
         <a href="{{ route('admin.teknisi.index') }}" class="{{ request()->routeIs('admin.teknisi.*') ? 'aktif' : '' }}">Teknisi</a>
 <a href="{{ route('admin.aset.index') }}" class="{{ request()->routeIs('admin.aset.*') ? 'aktif' : '' }}">Aset</a>
         <a href="#">Pengguna</a>
