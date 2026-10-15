@@ -11,9 +11,9 @@
     <div class="faq">
         @forelse ($artikel as $a)
             <details data-kb>
-                <summary>{{ $a->judul }}</summary>
+                <summary>{ $a -> $judul }</summary>
                 <div class="body">
-                    <ol>
+                    <ol> 
                         @foreach ($a->daftarLangkah() as $l)
                             <li>{{ $l }}</li>
                         @endforeach
