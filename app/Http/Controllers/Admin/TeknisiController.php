@@ -3,38 +3,45 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TeknisiRequest;
 use App\Models\Teknisi;
-use Illuminate\Http\Request;
+use App\Models\User;
 
 class TeknisiController extends Controller
 {
     public function index()
     {
-        $teknisi = Teknisi::latest()->get();
+        $teknisi = Teknisi::with('user')->latest()->get();
 
         return view('admin.teknisi.index', compact('teknisi'));
     }
 
     public function create()
     {
-        return view('admin.teknisi.form', ['teknisi' => new Teknisi()]);
+        return view('admin.teknisi.form', [
+            'teknisi' => new Teknisi(),
+            'users' => $this->daftarUser(),
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(TeknisiRequest $request)
     {
-        Teknisi::create($this->validasi($request));
+        Teknisi::create($request->validated());
 
         return redirect()->route('admin.teknisi.index')->with('sukses', 'Teknisi berhasil ditambahkan.');
     }
 
     public function edit(Teknisi $teknisi)
     {
-        return view('admin.teknisi.form', compact('teknisi'));
+        return view('admin.teknisi.form', [
+            'teknisi' => $teknisi,
+            'users' => $this->daftarUser($teknisi),
+        ]);
     }
 
-    public function update(Request $request, Teknisi $teknisi)
+    public function update(Teknisi $teknisi, Tekni $request)
     {
-        $teknisi->update($this->validasi($request));
+        $teknisi->update($request->validated());
 
         return redirect()->route('admin.teknisi.index')->with('sukses', 'Teknisi berhasil diubah.');
     }
@@ -46,17 +53,11 @@ class TeknisiController extends Controller
         return redirect()->route('admin.teknisi.index')->with('sukses', 'Teknisi berhasil dihapus.');
     }
 
-    private function validasi(Request $request): array
+    private function daftarUser(?Teknisi $teknisi = null)
     {
-        return $request->validate([
-            'nama'         => 'required|string|max:100',
-            'spesialisasi' => 'nullable|string|max:100',
-            'email'        => 'nullable|email|max:150',
-            'telepon'      => 'nullable|string|max:20',
-            'status'       => 'required|in:tersedia,sibuk,libur',
-        ], [
-            'nama.required' => 'Nama teknisi wajib diisi.',
-            'email.email'   => 'Format email belum benar.',
-        ]);
+        return User::whereDoesntHave('Teknisi')
+            ->when($teknisi?->user_id, fn ($q, $id) => $q->orWhere('id', $id))
+            ->orderBy('name')
+            ->get(['id', 'name', 'email']);
     }
 }

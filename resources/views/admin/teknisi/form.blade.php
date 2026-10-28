@@ -19,8 +19,22 @@
         @error('nama') <div class="error">{{ $message }}</div> @enderror
 
         <label for="spesialisasi">Spesialisasi</label>
-        <input type="text" id="spesialisasi" name="spesialisasi" value="{{ old('spesialisasi', $teknisi->spesialisasi) }}" placeholder="Contoh: Jaringan & Wi-Fi">
+        <select id="spesialisasi" name="spesialisasi">
+            <option value="">-- Pilih spesialisasi --</option>
+            @foreach (\App\Models\Teknisi::SPESIALISASI as $sp)
+                <option value="{{ $sp }}" @selected(old('spesialisasi', $teknisi->spesialisasi) === $sp)>{{ $sp }}</option>
+            @endforeach
+        </select>
         @error('spesialisasi') <div class="error">{{ $message }}</div> @enderror
+
+        <label for="user_id">Akun login (opsional)</label>
+        <select id="user_id" name="user_id">
+            <option value="">-- Tanpa akun --</option>
+            @foreach ($users as $u)
+                <option value="{{ $u->id }}" @selected((string) old('user_id', $teknisi->user_id) === (string) $u->id)>{{ $u->name }} ({{ $u->email }})</option>
+            @endforeach
+        </select>
+        @error('user_id') <div class="error">{{ $message }}</div> @enderror
 
         <label for="email">Email</label>
         <input type="text" id="email" name="email" value="{{ old('email', $teknisi->email) }}">
