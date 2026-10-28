@@ -174,15 +174,20 @@
                                 <label for="kategori">Kategori masalah</label>
                                 <select id="kategori" name="kategori" class="{{ $errors->has('kategori') ? 'invalid' : '' }}" required>
                                     <option value="">Pilih kategori</option>
-                                    @foreach (['Jaringan & Wi-Fi', 'Perangkat keras', 'Perangkat lunak', 'Akun & email', 'Printer & periferal'] as $k)
-                                        <option value="{{ $k }}" @selected(old('kategori', request('kategori')) === $k)>{{ $k }}</option>
+                                    @foreach ($kategoris as $k)
+                                        <option value="{{ $k->nama }}" @selected(old('kategori', request('kategori')) === $k->nama)>{{ $k->nama }}</option>
                                     @endforeach
                                 </select>
                                 @error('kategori') <span class="error">{{ $message }}</span> @enderror
                             </div>
                             <div class="field">
                                 <label for="aset">Kode aset PC <span class="hint">(opsional)</span></label>
-                                <input type="text" id="aset" name="aset" value="{{ old('aset', request('aset')) }}" placeholder="Contoh: PC-KEU-014">
+                                <select id="aset" name="aset">
+                                    <option value="">— tidak ada / tidak diketahui —</option>
+                                    @foreach ($asets as $a)
+                                        <option value="{{ $a->kode }}" @selected(old('aset', request('aset')) === $a->kode)>{{ $a->kode }} – {{ $a->perangkat }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
