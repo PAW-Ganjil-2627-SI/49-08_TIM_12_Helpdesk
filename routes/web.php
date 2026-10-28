@@ -34,8 +34,18 @@ Route::get('/teknisi', function () {
     return view('teknisi', ['teknisi' => Teknisi::orderBy('nama')->get()]);
 })->name('technicians.index');
 Route::get('/knowledge-base', function () {
-    return view('knowledge-base', ['artikel' => Artikel::latest()->get()]);
+    $query = Artikel::with('kategoriObj')->latest();
+    if ($s = request('search')) $query->where('judul', 'like', "%{$s}%");
+    if ($kid = request('kategori_id')) $query->where('kategori_id', $kid);
+    return view('knowledge-base', [
+        'artikel'   => $query->get(),
+        'kategoris' => Kategori::orderBy('nama')->get(),
+    ]);
 })->name('kb.index');
+
+Route::get('/knowledge-base/{artikel}', function (Artikel $artikel) {
+    return view('knowledge-base-show', ['artikel' => $artikel->load('kategoriObj')]);
+})->name('kb.show');
 Route::get('/aset', function () {
     return view('aset', ['aset' => Aset::orderBy('kode')->get()]);
 })->name('assets.index');

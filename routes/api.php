@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ArtikelController;
 use App\Http\Controllers\Api\KategoriController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -11,3 +12,6 @@ Route::get('/user', function (Request $request) {
 Route::get('/kategori', [KategoriController::class, 'index']);
 Route::get('/kategori/{kategori}', [KategoriController::class, 'show']);
 Route::post('/kategori', [KategoriController::class, 'store']);
+
+Route::get('/knowledge-base', [ArtikelController::class, 'index']);
+Route::get('/knowledge-base/{artikel}', [ArtikelController::class, 'show']);

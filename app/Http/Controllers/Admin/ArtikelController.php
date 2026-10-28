@@ -49,13 +49,14 @@ class ArtikelController extends Controller
     private function validasi(Request $request): array
     {
         return $request->validate([
-            'judul'    => 'required|string|max:150',
-            'kategori' => 'required|string|max:100',
-            'langkah'  => 'required|string',
+            'judul'       => 'required|string|max:150',
+            'kategori_id' => 'required|exists:kategoris,id',
+            'langkah'     => 'required|string',
         ], [
-            'judul.required'    => 'Judul wajib diisi.',
-            'kategori.required' => 'Kategori wajib diisi.',
-            'langkah.required'  => 'Langkah-langkah wajib diisi.',
+            'judul.required'        => 'Judul wajib diisi.',
+            'kategori_id.required'  => 'Kategori wajib dipilih.',
+            'kategori_id.exists'    => 'Kategori tidak valid.',
+            'langkah.required'      => 'Langkah-langkah wajib diisi.',
         ]);
     }
 }
