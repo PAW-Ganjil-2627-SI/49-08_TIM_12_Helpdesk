@@ -39,7 +39,7 @@ class TeknisiController extends Controller
         ]);
     }
 
-    public function update(Teknisi $teknisi, Tekni $request)
+    public function update(TeknisiRequest $request, Teknisi $teknisi)
     {
         $teknisi->update($request->validated());
 
@@ -55,7 +55,7 @@ class TeknisiController extends Controller
 
     private function daftarUser(?Teknisi $teknisi = null)
     {
-        return User::whereDoesntHave('Teknisi')
+        return User::whereDoesntHave('teknisi')
             ->when($teknisi?->user_id, fn ($q, $id) => $q->orWhere('id', $id))
             ->orderBy('name')
             ->get(['id', 'name', 'email']);

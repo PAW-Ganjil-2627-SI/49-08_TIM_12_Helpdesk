@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TicketController;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,22 +18,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/tiket/buat', fn () => view('tickets.create'))->name('tickets.create');
-
-Route::post('/tiket', function (Request $request) {
-    $request->validate([
-        'nama'       => 'required|string|max:100',
-        'departemen' => 'required',
-        'kategori'   => 'required',
-        'judul'      => 'required|string|max:150',
-        'deskripsi'  => 'required|string|min:10',
-        'prioritas'  => 'required|in:rendah,sedang,mendesak',
-    ]);
-
-    $no = 'TKT-' . str_pad(random_int(1, 9999), 4, '0', STR_PAD_LEFT);
-
-    return redirect()->route('tickets.create')->with('ticket_no', $no);
-})->name('tickets.store');
+Route::get('/tiket/buat', [TicketController::class, 'create'])->name('tickets.create');
+Route::post('/tiket', [TicketController::class, 'store'])->name('tickets.store');
 
 Route::get('/kategori', function () {
     return view('kategori', ['kategori' => Kategori::orderBy('nama')->get()]);
@@ -47,8 +34,18 @@ Route::get('/teknisi', function () {
     return view('teknisi', ['teknisi' => Teknisi::orderBy('nama')->get()]);
 })->name('technicians.index');
 Route::get('/knowledge-base', function () {
-    return view('knowledge-base', ['artikel' => Artikel::latest()->get()]);
+    $query = Artikel::with('kategoriObj')->latest();
+    if ($s = request('search')) $query->where('judul', 'like', "%{$s}%");
+    if ($kid = request('kategori_id')) $query->where('kategori_id', $kid);
+    return view('knowledge-base', [
+        'artikel'   => $query->get(),
+        'kategoris' => Kategori::orderBy('nama')->get(),
+    ]);
 })->name('kb.index');
+
+Route::get('/knowledge-base/{artikel}', function (Artikel $artikel) {
+    return view('knowledge-base-show', ['artikel' => $artikel->load('kategoriObj')]);
+})->name('kb.show');
 Route::get('/aset', function () {
     return view('aset', ['aset' => Aset::orderBy('kode')->get()]);
 })->name('assets.index');
