@@ -21,7 +21,7 @@
         <label for="kategori_id">Kategori</label>
         <select id="kategori_id" name="kategori_id">
             <option value="">— Pilih kategori —</option>
-            @foreach (\App\Models\Kategori::orderBy('nama')->get() as $k)
+            @foreach ($kategoris as $k)
                 <option value="{{ $k->id }}" {{ old('kategori_id', $artikel->kategori_id) == $k->id ? 'selected' : '' }}>
                     {{ $k->nama }}
                 </option>

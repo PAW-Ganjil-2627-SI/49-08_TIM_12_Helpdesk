@@ -4,20 +4,24 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Artikel;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 
 class ArtikelController extends Controller
 {
     public function index()
     {
-        $daftar = Artikel::latest()->get();
+        $daftar = Artikel::with('kategoriObj')->latest()->get();
 
         return view('admin.artikel.index', compact('daftar'));
     }
 
     public function create()
     {
-        return view('admin.artikel.form', ['artikel' => new Artikel()]);
+        return view('admin.artikel.form', [
+            'artikel' => new Artikel(),
+            'kategoris' => Kategori::orderBy('nama')->get(),
+        ]);
     }
 
     public function store(Request $request)
@@ -29,7 +33,10 @@ class ArtikelController extends Controller
 
     public function edit(Artikel $artikel)
     {
-        return view('admin.artikel.form', compact('artikel'));
+        return view('admin.artikel.form', [
+            'artikel' => $artikel,
+            'kategoris' => Kategori::orderBy('nama')->get(),
+        ]);
     }
 
     public function update(Request $request, Artikel $artikel)
