@@ -24,15 +24,11 @@ Route::post('/tiket', [TicketController::class, 'store'])->name('tickets.store')
 Route::get('/kategori', function () {
     return view('kategori', ['kategori' => Kategori::orderBy('nama')->get()]);
 })->name('categories.index');
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('kategori', KategoriController::class)->except('show');
-    Route::resource('teknisi', TeknisiController::class)->except('show')->parameters(['teknisi' => 'teknisi']);
-});
 
 Route::get('/teknisi', function () {
     return view('teknisi', ['teknisi' => Teknisi::orderBy('nama')->get()]);
 })->name('technicians.index');
+
 Route::get('/knowledge-base', function () {
     $query = Artikel::with('kategoriObj')->latest();
     if ($s = request('search')) $query->where('judul', 'like', "%{$s}%");
@@ -46,14 +42,17 @@ Route::get('/knowledge-base', function () {
 Route::get('/knowledge-base/{artikel}', function (Artikel $artikel) {
     return view('knowledge-base-show', ['artikel' => $artikel->load('kategoriObj')]);
 })->name('kb.show');
+
 Route::get('/aset', function () {
     return view('aset', ['aset' => Aset::orderBy('kode')->get()]);
 })->name('assets.index');
+
 Route::get('/masuk', [AuthController::class, 'show'])->name('login')->middleware('guest');
-Route::post('/masuk', [AuthController::class, 'login'])->name('login.attempt')->middleware('guest');
+Route::post('/masuk', [AuthController::class, 'login'])->name('login.attempt')->middleware(['guest', 'throttle:20,1']);
 Route::post('/daftar', [AuthController::class, 'register'])->name('register.store')->middleware('guest');
 Route::post('/keluar', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('kategori', KategoriController::class)->except('show');
     Route::resource('teknisi', TeknisiController::class)->except('show')->parameters(['teknisi' => 'teknisi']);

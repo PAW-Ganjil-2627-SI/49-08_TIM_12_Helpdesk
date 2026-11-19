@@ -21,7 +21,7 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $a->judul }}</td>
-                    <td>{{ $a->kategori }}</td>
+                    <td>{{ $a->kategoriObj?->nama ?? $a->kategori ?? '-' }}</td>
                     <td>{{ count($a->daftarLangkah()) }} langkah</td>
                     <td class="aksi">
                         <a href="{{ route('admin.artikel.edit', $a) }}" class="btn abu">Ubah</a>
