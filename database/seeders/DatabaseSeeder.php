@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             KategoriSeeder::class,
             ArtikelSeeder::class,
+            AsetSeeder::class,
         ]);
 
         // 2. Seed Akun Admin Helpdesk
